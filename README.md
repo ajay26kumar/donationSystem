@@ -8,7 +8,7 @@ Follow these steps to run the project locally:
 Clone the Project
 
 git clone https://github.com/ajay26kumar/donationSystem
-cd donationSystem![Screenshot 2025-05-12 091446](https://github.com/user-attachments/assets/aa49d166-a1fb-4aef-91c6-9eef9f6d5e61)
+cd donationSystem
 
 Configure Environment
 
