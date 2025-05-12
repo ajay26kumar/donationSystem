@@ -24,7 +24,7 @@
         <button id="monthlyBtn">Monthly</button>
     </div>
 
-    <form method="POST" action="{{ route('donation.submit') }}">
+    <form method="POST" action="{{ route('donation.final') }}">
         @csrf
 
         <div class="input-row">
@@ -57,69 +57,9 @@
         <input type="hidden" name="donation_type" value="one-time" id="donationTypeInput">
         <input type="hidden" name="amount" id="selectedAmount">
 
-        <div id="card-element" class="StripeElement"></div>
-<div id="card-errors" class="text-danger mt-2"></div>
-
-<button id="submit-button" class="continue-btn mt-3">Continue</button>
+ <button type="submit" class="continue-btn">Continue</button>
 
     </form>
 </div>
+
 @endsection
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-    const stripe = Stripe('{{ config("services.stripe.key") }}');
-    const elements = stripe.elements();
-
-    const style = {
-        base: {
-            color: "#32325d",
-            fontFamily: "'Segoe UI', sans-serif",
-            fontSmoothing: "antialiased",
-            fontSize: "16px",
-            "::placeholder": { color: "#aab7c4" }
-        },
-        invalid: {
-            color: "#fa755a",
-            iconColor: "#fa755a"
-        }
-    };
-
-    const card = elements.create("card", { style: style });
-    card.mount("#card-element");
-
-    card.on("change", event => {
-        const displayError = document.getElementById("card-errors");
-        displayError.textContent = event.error ? event.error.message : "";
-    });
-
-    const form = document.querySelector("form");
-    const submitBtn = document.getElementById("submit-button");
-
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        submitBtn.disabled = true;
-
-        const { paymentMethod, error } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: card,
-            billing_details: {
-                name: form.donor_name.value,
-                email: form.donor_email.value,
-            }
-        });
-
-        if (error) {
-            document.getElementById("card-errors").textContent = error.message;
-            submitBtn.disabled = false;
-        } else {
-            const hiddenInput = document.createElement("input");
-            hiddenInput.setAttribute("type", "hidden");
-            hiddenInput.setAttribute("name", "payment_method");
-            hiddenInput.setAttribute("value", paymentMethod.id);
-            form.appendChild(hiddenInput);
-
-            form.submit();
-        }
-    });
-</script>
-
